@@ -1,0 +1,23 @@
+name: ci-container
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+    timeout-minutes: 20
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Build container
+        run: podman build -t ghcr.io/${{ github.repository_owner }}/composefs-rs-ci -f Containerfile.ci examples/common
+
+      - name: Login to ghcr.io
+        run: podman login --username ${{ github.actor }} --password ${{ github.token }} ghcr.io
+
+      - name: Push container
+        run: podman push ghcr.io/${{ github.repository_owner }}/composefs-rs-ci

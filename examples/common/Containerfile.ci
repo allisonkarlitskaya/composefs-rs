@@ -1,0 +1,19 @@
+FROM docker.io/debian:trixie
+COPY install-patched-tools /
+#RUN sed -i 's/Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources
+#RUN apt-get update
+#RUN apt-get install -y \
+#        git \
+#        cargo \
+#        erofs-utils \
+#        fsverity \
+#        libvirt-daemon \
+#        libvirt-daemon-driver-qemu \
+#        mtools \
+#        podman \
+#        python3-libvirt \
+#        qemu-system \
+#        skopeo \
+#        systemd-boot-efi
+#RUN apt-get build-dep -y systemd e2fsprogs
+#RUN /install-patched-tools /usr/local/bin
