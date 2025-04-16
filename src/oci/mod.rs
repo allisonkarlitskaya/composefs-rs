@@ -19,12 +19,12 @@ use crate::{
     oci::tar::{get_entry, split_async},
     repository::Repository,
     splitstream::DigestMap,
-    util::parse_sha256,
+    util::{parse_sha256, Sha256Digest},
 };
 
 pub fn import_layer(
     repo: &Repository,
-    sha256: &Sha256HashValue,
+    sha256: &Sha256Digest,
     name: Option<&str>,
     tar_stream: &mut impl Read,
 ) -> Result<Sha256HashValue> {
@@ -93,7 +93,7 @@ impl<'repo> ImageOp<'repo> {
 
     pub async fn ensure_layer(
         &self,
-        layer_sha256: &Sha256HashValue,
+        layer_sha256: &Sha256Digest,
         descriptor: &Descriptor,
     ) -> Result<Sha256HashValue> {
         // We need to use the per_manifest descriptor to download the compressed layer but it gets
