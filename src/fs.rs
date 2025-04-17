@@ -311,6 +311,7 @@ impl<ObjectID: FsVerityHashValue> FilesystemReader<'_, ObjectID> {
 }
 
 pub fn read_from_path<ObjectID: FsVerityHashValue>(
+    dirfd: impl AsFd,
     path: &Path,
     repo: Option<&Repository<ObjectID>>,
 ) -> Result<FileSystem<ObjectID>> {
@@ -320,7 +321,7 @@ pub fn read_from_path<ObjectID: FsVerityHashValue>(
         root_mtime: None,
     };
     let mut fs = FileSystem {
-        root: reader.read_directory(CWD, path.as_os_str())?,
+        root: reader.read_directory(dirfd, path.as_os_str())?,
     };
 
     // A filesystem with no files ends up in the 1970s...
@@ -335,10 +336,11 @@ pub fn read_from_path<ObjectID: FsVerityHashValue>(
 }
 
 pub fn create_image<ObjectID: FsVerityHashValue>(
+    dirfd: impl AsFd,
     path: &Path,
     repo: Option<&Repository<ObjectID>>,
 ) -> Result<ObjectID> {
-    let fs = read_from_path(path, repo)?;
+    let fs = read_from_path(dirfd, path, repo)?;
     let image = crate::erofs::writer::mkfs_erofs(&fs);
     if let Some(repo) = repo {
         Ok(repo.write_image(None, &image)?)
@@ -347,8 +349,8 @@ pub fn create_image<ObjectID: FsVerityHashValue>(
     }
 }
 
-pub fn create_dumpfile<ObjectID: FsVerityHashValue>(path: &Path) -> Result<()> {
-    let fs = read_from_path::<ObjectID>(path, None)?;
+pub fn create_dumpfile<ObjectID: FsVerityHashValue>(dirfd: impl AsFd, path: &Path) -> Result<()> {
+    let fs = read_from_path::<ObjectID>(dirfd, path, None)?;
     super::dumpfile::write_dumpfile(&mut std::io::stdout(), &fs)
 }
 

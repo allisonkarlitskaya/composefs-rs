@@ -189,11 +189,11 @@ fn main() -> Result<()> {
             }
         },
         Command::CreateImage { ref path } => {
-            let image_id = composefs::fs::create_image(path, Some(&repo))?;
+            let image_id = composefs::fs::create_image(CWD, path, Some(&repo))?;
             println!("{}", image_id.to_hex());
         }
         Command::CreateDumpfile { ref path } => {
-            composefs::fs::create_dumpfile::<Sha256HashValue>(path)?;
+            composefs::fs::create_dumpfile::<Sha256HashValue>(CWD, path)?;
         }
         Command::Mount { name, mountpoint } => {
             repo.mount(&name, &mountpoint)?;
