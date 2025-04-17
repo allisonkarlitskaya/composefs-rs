@@ -1,9 +1,12 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 
-use rustix::fs::CWD;
+use rustix::{
+    fs::CWD,
+    mount::{open_tree, OpenTreeFlags},
+};
 
 use composefs::{
     fsverity::{FsVerityHashValue, Sha256HashValue},
@@ -193,7 +196,12 @@ fn main() -> Result<()> {
             println!("{}", image_id.to_hex());
         }
         Command::CreateDumpfile { ref path } => {
-            composefs::fs::create_dumpfile::<Sha256HashValue>(CWD, path)?;
+            let tree = open_tree(
+                CWD,
+                path,
+                OpenTreeFlags::OPEN_TREE_CLONE | OpenTreeFlags::OPEN_TREE_CLOEXEC,
+            )?;
+            composefs::fs::create_dumpfile::<Sha256HashValue>(tree, Path::new("."))?;
         }
         Command::Mount { name, mountpoint } => {
             repo.mount(&name, &mountpoint)?;
