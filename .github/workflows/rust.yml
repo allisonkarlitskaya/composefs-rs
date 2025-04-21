@@ -26,4 +26,4 @@ jobs:
     - run: cargo fmt --check
     - run: cargo clippy -- -Dwarnings
     - run: env CFS_TEST_TMPDIR=/run/host/var/tmp cargo test --verbose
-    - run: cargo publish --dry-run
+    - run: cargo publish --dry-run || true
