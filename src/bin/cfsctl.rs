@@ -104,6 +104,10 @@ enum Command {
     ImageObjects {
         name: String,
     },
+    Fetch {
+        url: String,
+        name: String,
+    },
 }
 
 #[tokio::main]
@@ -202,6 +206,11 @@ async fn main() -> Result<()> {
         }
         Command::GC => {
             repo.gc()?;
+        }
+        Command::Fetch { url, name } => {
+            let (sha256, verity) = composefs::http::download(&url, &name, Arc::new(repo)).await?;
+            println!("sha256 {}", hex::encode(sha256));
+            println!("verity {}", verity.to_hex());
         }
     }
     Ok(())

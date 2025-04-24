@@ -5,6 +5,7 @@ pub mod dumpfile_parse;
 pub mod erofs;
 pub mod fs;
 pub mod fsverity;
+pub mod http;
 pub mod image;
 pub mod mount;
 pub mod mountcompat;

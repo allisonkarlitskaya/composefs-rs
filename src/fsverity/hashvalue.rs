@@ -10,7 +10,7 @@ where
     Self: Send + Sync + 'static,
     Self: From<Output<Self::Digest>>,
     Self: FromBytes + Immutable + IntoBytes + KnownLayout + Unaligned,
-    Self: Hash + Eq,
+    Self: Hash + Eq + Ord,
     Self: fmt::Debug,
 {
     type Digest: Digest + FixedOutputReset + fmt::Debug;
@@ -93,7 +93,19 @@ impl fmt::Debug for Sha512HashValue {
     }
 }
 
-#[derive(Clone, Eq, FromBytes, Hash, Immutable, IntoBytes, KnownLayout, PartialEq, Unaligned)]
+#[derive(
+    Clone,
+    Eq,
+    FromBytes,
+    Hash,
+    Immutable,
+    IntoBytes,
+    KnownLayout,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Unaligned,
+)]
 #[repr(C)]
 pub struct Sha256HashValue([u8; 32]);
 
@@ -110,7 +122,19 @@ impl FsVerityHashValue for Sha256HashValue {
     const ID: &str = "sha256";
 }
 
-#[derive(Clone, Eq, FromBytes, Hash, Immutable, IntoBytes, KnownLayout, PartialEq, Unaligned)]
+#[derive(
+    Clone,
+    Eq,
+    FromBytes,
+    Hash,
+    Immutable,
+    IntoBytes,
+    KnownLayout,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Unaligned,
+)]
 #[repr(C)]
 pub struct Sha512HashValue([u8; 64]);
 
