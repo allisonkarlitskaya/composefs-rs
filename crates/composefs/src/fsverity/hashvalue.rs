@@ -8,6 +8,7 @@ use core::{fmt, hash::Hash};
 
 use hex::FromHexError;
 use sha2::{digest::FixedOutputReset, digest::Output, Digest, Sha256, Sha512};
+use std::cmp::Ord;
 use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
 
 /// Trait for fs-verity hash value types supporting SHA-256 and SHA-512.
@@ -22,6 +23,7 @@ where
     Self: Hash + Eq,
     Self: fmt::Debug,
     Self: Send + Sync + Unpin + 'static,
+    Self: PartialOrd + Ord,
 {
     /// The underlying hash digest algorithm type.
     type Digest: Digest + FixedOutputReset + fmt::Debug;
@@ -160,7 +162,19 @@ impl fmt::Debug for Sha512HashValue {
 /// A SHA-256 hash value for fs-verity operations.
 ///
 /// This is a 32-byte hash value using the SHA-256 algorithm.
-#[derive(Clone, Eq, FromBytes, Hash, Immutable, IntoBytes, KnownLayout, PartialEq, Unaligned)]
+#[derive(
+    Clone,
+    Eq,
+    FromBytes,
+    Hash,
+    Immutable,
+    IntoBytes,
+    KnownLayout,
+    PartialEq,
+    Unaligned,
+    PartialOrd,
+    Ord,
+)]
 #[repr(C)]
 pub struct Sha256HashValue([u8; 32]);
 
@@ -180,7 +194,19 @@ impl FsVerityHashValue for Sha256HashValue {
 /// A SHA-512 hash value for fs-verity operations.
 ///
 /// This is a 64-byte hash value using the SHA-512 algorithm.
-#[derive(Clone, Eq, FromBytes, Hash, Immutable, IntoBytes, KnownLayout, PartialEq, Unaligned)]
+#[derive(
+    Clone,
+    Eq,
+    FromBytes,
+    Hash,
+    Immutable,
+    IntoBytes,
+    KnownLayout,
+    PartialEq,
+    Unaligned,
+    PartialOrd,
+    Ord,
+)]
 #[repr(C)]
 pub struct Sha512HashValue([u8; 64]);
 
